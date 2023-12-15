@@ -10,6 +10,7 @@ public class PinballStick : MonoBehaviour
     public float pinballDamper = 150f;
     public string inputName;
     HingeJoint hinge;
+    private bool pressedButton = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +27,7 @@ public class PinballStick : MonoBehaviour
         if (Input.GetAxis(inputName) == 1)
         {
             spring.targetPosition = pressedPosition;
+            pressedButton = true;
         }
         else
         {
@@ -33,6 +35,17 @@ public class PinballStick : MonoBehaviour
         }
         hinge.spring = spring;
         hinge.useLimits = true;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (pressedButton)
+        {
+
+            if (collision.collider.CompareTag("Player"))
+            {
+                collision.collider.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);
+            }
+        }
     }
 }
 
